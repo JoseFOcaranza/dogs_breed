@@ -11,7 +11,7 @@ abstract class VerificationRepo {
 
 class RepoTestVerification extends VerificationRepo {
   final String retriever =
-      """ {"message":[ "chesapeake","curly","flatcoated","golden"], "status": "success"}""";
+      """ {"message":["chesapeake","curly","flatcoated","golden"], "status": "success"}""";
 
   final String pitbull = """ {"message":[], "status": "success"} """;
 
@@ -54,10 +54,10 @@ class RepoTestVerification extends VerificationRepo {
 
   @override
   Either<Problems, DogRegister> getDogRegister(FormatBreed breed) {
-    if (breed.valor == 'hound') {
+    if (breed.valor == 'retriever') {
       return getBreedRegisterFromJson(retriever, breed.valor);
     }
-    if (breed.valor == 'husky') {
+    if (breed.valor == 'pitbull') {
       return getBreedRegisterFromJson(pitbull, breed.valor);
     }
     if (breed.valor == 'breedNotExist') {

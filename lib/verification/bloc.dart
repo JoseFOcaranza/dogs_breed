@@ -9,9 +9,9 @@ class VerificationEvent {}
 
 class Created extends VerificationEvent {}
 
-class ReciviedName extends VerificationEvent {
+class ReciviedBreed extends VerificationEvent {
   final FormatBreed breed;
-  ReciviedName(this.breed);
+  ReciviedBreed(this.breed);
 }
 
 class ConfirmedName extends VerificationEvent {}
@@ -20,17 +20,21 @@ class VerificationState {}
 
 class Creating extends VerificationState {}
 
-class RequestingName extends VerificationState {}
+class RequestingBreed extends VerificationState {}
 
 class WaitingConfirmationName extends VerificationState {}
 
 class ShowingRequestUpdate extends VerificationState {}
 
-class ShowingNotConfirmedName extends VerificationState {}
+class ShowingNotConfirmedName extends VerificationState {
+  final FormatBreed breed;
+  ShowingNotConfirmedName(this.breed);
+}
 
-class ShowingConfirmedName extends VerificationState {
+class ShowingConfirmedBreed extends VerificationState {
   final DogRegister dogRegister;
-  ShowingConfirmedName(this.dogRegister);
+  final FormatBreed breed;
+  ShowingConfirmedBreed(this.dogRegister, this.breed);
 }
 
 class ShowingBreedWithoutSubBreed extends VerificationState {
@@ -44,24 +48,24 @@ class VerificationBloc extends Bloc<VerificationEvent, VerificationState> {
   final VerificationRepo _verificationRepo;
   VerificationBloc(this._verificationRepo) : super(Creating()) {
     on<Created>((event, emit) {
-      emit(RequestingName());
+      emit(RequestingBreed());
     });
-    on<ReciviedName>(
+    on<ReciviedBreed>(
       (event, emit) {
         emit(WaitingConfirmationName());
-        final resultado = _verificationRepo.getDogRegister(event.breed);
-        resultado.match((l) {
+        final result = _verificationRepo.getDogRegister(event.breed);
+        result.match((l) {
           if (l is IncorrectVersionJson) {
             emit(ShowingRequestUpdate());
           }
           if (l is NotRegisteredDog) {
-            emit(ShowingNotConfirmedName());
+            emit(ShowingNotConfirmedName(event.breed));
           }
           if (l is WithoutSubBreed) {
             emit(ShowingBreedWithoutSubBreed(event.breed));
           }
         }, (r) {
-          emit(ShowingConfirmedName(r));
+          emit(ShowingConfirmedBreed(r, event.breed));
         });
       },
     );

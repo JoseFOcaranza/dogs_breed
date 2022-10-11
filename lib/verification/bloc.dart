@@ -26,9 +26,11 @@ class WaitingConfirmationName extends VerificationState {}
 
 class ShowingRequestUpdate extends VerificationState {}
 
-class ShowingNotConfirmedName extends VerificationState {
+class InvalidBreed extends VerificationState {}
+
+class ShowingNotConfirmedBreed extends VerificationState {
   final FormatBreed breed;
-  ShowingNotConfirmedName(this.breed);
+  ShowingNotConfirmedBreed(this.breed);
 }
 
 class ShowingConfirmedBreed extends VerificationState {
@@ -59,7 +61,7 @@ class VerificationBloc extends Bloc<VerificationEvent, VerificationState> {
             emit(ShowingRequestUpdate());
           }
           if (l is NotRegisteredDog) {
-            emit(ShowingNotConfirmedName(event.breed));
+            emit(ShowingNotConfirmedBreed(event.breed));
           }
           if (l is WithoutSubBreed) {
             emit(ShowingBreedWithoutSubBreed(event.breed));

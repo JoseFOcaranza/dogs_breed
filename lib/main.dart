@@ -4,6 +4,7 @@ import 'package:dogs_breed/verification/views/view_creating.dart';
 import 'package:dogs_breed/verification/views/view_requesting_breed.dart';
 import 'package:dogs_breed/verification/views/view_showing_breed_without_subbreed.dart';
 import 'package:dogs_breed/verification/views/view_showing_confirmed_breed.dart';
+import 'package:dogs_breed/verification/views/view_showing_not_confirmed_breed.dart';
 import 'package:dogs_breed/verification/views/view_showing_request_update.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -55,6 +56,9 @@ class Myapp extends StatelessWidget {
             }
             if (state is ShowingBreedWithoutSubBreed) {
               return ViewShowingBreedWithoutSubBreed(state.breed);
+            }
+            if (state is ShowingNotConfirmedBreed) {
+              return ViewShowingNotConfirmedBreed(state.breed);
             }
             return const Center(
               child: Text("Si estas viendo esto, RUN"),

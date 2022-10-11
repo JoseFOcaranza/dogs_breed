@@ -11,29 +11,78 @@ class ViewRequestingBreed extends StatefulWidget {
 }
 
 class _ViewRequestingBreedState extends State<ViewRequestingBreed> {
-  final _controller = TextEditingController();
+  bool _nameBreedValidator = false;
+  late final TextEditingController _controller;
+  @override
+  void initState() {
+    _controller = TextEditingController();
+    _controller.addListener(listenValidator);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final theBloc = context.read<VerificationBloc>();
-    return Column(
-      children: [
-        const Text('Dame el nombre pa'),
-        TextField(
-          controller: _controller,
-        ),
-        TextButton(
-            onPressed: () {
-              theBloc.add(
-                  ReciviedBreed(FormatBreed.constructor(_controller.text)));
-            },
-            child: const Text('Aceptar'))
-      ],
+    final elBloc = context.read<VerificationBloc>();
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          TextField(
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'Enter',
+            ),
+            controller: _controller,
+          ),
+          Container(
+            child: _nameBreedValidator
+                ? null
+                : TextButton(
+                    style: ButtonStyle(
+                      foregroundColor:
+                          MaterialStateProperty.all<Color>(Colors.grey),
+                    ),
+                    onPressed: null,
+                    child: const Text('Buscar Raza'),
+                  ),
+          ),
+          Container(
+            child: !_nameBreedValidator
+                ? null
+                : TextButton(
+                    style: ButtonStyle(
+                      foregroundColor:
+                          MaterialStateProperty.all<Color>(Colors.blue),
+                    ),
+                    onPressed: () {
+                      elBloc.add(
+                        ReciviedBreed(
+                          FormatBreed.constructor(_controller.text),
+                        ),
+                      );
+                    },
+                    child: const Text('Buscar Raza'),
+                  ),
+          ),
+        ],
+      ),
     );
   }
 
   @override
   void dispose() {
-    _controller.dispose();
     super.dispose();
+    _controller.dispose();
+  }
+
+  void listenValidator() {
+    setState(() {
+      try {
+        FormatBreed.constructor(_controller.text);
+        _nameBreedValidator = true;
+      } catch (e) {
+        _nameBreedValidator = false;
+      }
+    });
   }
 }

@@ -8,7 +8,7 @@ class ViewShowingRequestUpdate extends StatelessWidget {
     return Center(
       child: Column(children: [
         Text(
-          'Actualizate pa',
+          'Actualizate krnal',
           style: Theme.of(context).textTheme.headline1,
         ),
       ]),
